@@ -1,0 +1,27 @@
+#!/bin/bash
+
+if [ -d /home/user/restore/ ]
+	then rm -R /home/user/restore/
+fi
+
+mkdir /home/user/restore/
+
+latestBackup=$(ls -F ~/ | grep -E "Backup-....-..-../" | sed "s/\///g" | sort -t"-" -nk2 -nk3 -nk4 | head -n1 )
+
+if [ -z "$latestBackup" ]
+	then echo "Backup doesn't exist"
+	exit
+fi
+
+source=$(ls /home/user/$latestBackup/ | grep -v "\.....-..-..")
+
+for temp in $source
+do
+	cp -R /home/user/$latestBackup/$temp  /home/user/restore/$temp
+done
+
+echo "Upback has worked."
+exit 0
+
+
+

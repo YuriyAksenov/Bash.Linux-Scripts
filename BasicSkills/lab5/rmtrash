@@ -1,0 +1,43 @@
+#!/bin/bash
+
+
+if [ -z "$1" ]
+	then echo "Введите имя файла"
+	exit
+fi
+
+if ! [ -f "$PWD/$1" ]
+	then echo "Файл не сущесвует"
+	exit
+fi
+
+fileName=$(echo "$1" | tr -d "/")
+
+
+if ! [ -d ~/.trash/ ]
+	then mkdir ~/.trash
+fi
+
+tmp=$(ls -a ~/.trash | grep -E -h -o "([[:digit:]])+" | sort -n -r | head -n 1)
+
+if [ -z "$tmp" ]
+	then
+		ln $PWD/$fileName ~/.trash/1
+		tmp=1
+	else
+		let "tmp=$tmp+1"
+		ln $PWD/$fileName ~/.trash/$tmp
+fi
+
+
+rm ./$fileName
+
+echo "$PWD/$fileName>>$tmp" >> ~/.trash.log
+
+echo "Rmtrash has worked."
+exit 0 
+
+
+
+
+

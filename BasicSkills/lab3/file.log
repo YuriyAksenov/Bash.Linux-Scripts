@@ -1,0 +1,9 @@
+PID:COMMAND
+1681:-bash
+1711:-bash
+1741:-bash
+1826:nano script2.bash
+1843:/bin/bash ./script1.bash
+1848:ps -u user o pid,command
+1849:sed s/^ *//
+1850:sed s/ /:/

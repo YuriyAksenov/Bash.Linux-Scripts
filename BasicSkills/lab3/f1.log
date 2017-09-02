@@ -1,0 +1,13 @@
+PID:COMMAND
+1701:-bash
+1735:-bash
+1815:-bash
+1838:man tr
+1841:sh -c (cd "/usr/share/man" && (echo ".pl 1100i"; /usr/bin/gunzip -c '/usr/share/man/man1/tr.1.gz'; echo ".\\\""; echo ".pl \n(nlu+10") | /usr/bin/gtbl | /usr/bin/nroff -c -mandoc 2>/dev/null | /usr/bin/less -is)
+1842:sh -c (cd "/usr/share/man" && (echo ".pl 1100i"; /usr/bin/gunzip -c '/usr/share/man/man1/tr.1.gz'; echo ".\\\""; echo ".pl \n(nlu+10") | /usr/bin/gtbl | /usr/bin/nroff -c -mandoc 2>/dev/null | /usr/bin/less -is)
+1846:/usr/bin/less -is
+2334:nano script1.bash
+2338:/bin/bash ./script1.bash
+2343:ps -u user o pid,command
+2344:sed s/^ *//
+2345:sed s/ /:/

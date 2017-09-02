@@ -1,0 +1,95 @@
+#!/bin/bash
+
+if [ -z "$1" ]
+	then echo "Enter file name"
+	exit
+fi
+
+pattern=$(echo "$1" |
+ 	sed "s/\+/\\\+/g" | 
+	sed "s/\*/\\\*/g" | 
+	sed "s/\?/\\\?/g" |
+	sed "s/\./\\\./g" |
+	sed "s/\^/\\\^/g" |
+	sed "s/\[/\\\[/g" |
+	sed "s/\]/\\\]/g" )
+
+str=$(grep -E "/$pattern" ~/.trash.log)
+
+if [ -z "$str" ]
+	then echo "Trash doesn't have this file."
+	exit
+fi
+
+for temp in $str
+	do
+	allPath=$(
+		echo "$temp" | 
+		grep -E "(/[[:alnum:]_-])+" | 
+		sed -r "s/>>[0-9]{1,}//g")
+	#allPath=$(dirname "$temp")
+	echo "Do you want to reborn $allPath Y/N?"
+	read reborn 
+	if [[ "$reborn" == "Y" ]]
+	then
+		direct=$( dirname "$allPath")
+		trashFileName=$( 
+			echo "$temp" | 
+			grep -Eo ">>([[:digit:]])+" |
+			sed "s/>>//g")
+#Убрать отрицание
+		if [ -d "$direct" ]
+		then 
+			if ! [ -f "$allPath" ]
+				then 
+					ln ~/.trash/$trashFileName $allPath
+					rm ~/.trash/$trashFileName
+					b=$(grep -v -E "$trashFileName" ~/.trash.log)
+					echo "$b" > ~/.trash.log 
+				else 
+					echo "File already exists." 
+					echo "Do you want to replace Enter 1 "
+					echo "Do you watn to miss that Enter 2"
+
+					read replace
+					if [[ "$replace" == "1" ]]
+					then 
+						rm "$allPath"
+						ln ~/.trash/$trashFileName $allPath
+						rm ~/.trash/$trashFileName
+						b=$(grep -v -E "$trashFileName" ~/.trash.log) 
+						echo "$b" > ~/.trash.log 
+					fi
+				
+			fi
+		else
+			echo "Old path, where file was, are deleted. Now file reborn in $HOME"
+			oldFileName=$(basename "$allPath")
+			
+			if ! [ -f "$HOME/$oldFileName" ]
+				then 
+					ln ~/.trash/$trashFileName ~/$oldFileName
+					rm ~/.trash/$trashFileName
+					b=$(grep -v "$trashFileName" ~/.trash.log)					
+					echo "$b" > ~/.trash.log 
+				else 
+					echo "File already exists!)"
+					echo "Do you want to replace Enter 1"
+					echo "Do you want to miss that Enter 2"
+					
+					read replace
+					if [[ "$replace" == "1" ]]
+					then
+						rm ~/$oldFileName
+						ln ~/.trash/$trashFileName ~/$oldFileName
+						rm ~/.trash/$trashFileName
+						b=$(grep -v "$trashFileName" ~/.trash.log)					
+						echo "$b" > ~/.trash.log 
+					fi
+			fi 
+		fi
+	exit
+	fi	
+done
+echo "Untrash has ended."
+exit 0
