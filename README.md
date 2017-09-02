@@ -1,6 +1,6 @@
 # Bash.Linux-Scripts
 
-Labs for Bash OS course
+Labs for Bash by course of Operation System
 
 The most interesting labs are:
 
